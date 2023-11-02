@@ -25,21 +25,21 @@ struct ARViewContainer: UIViewRepresentable {
 // Custom ARView.
 class CustomARView: ARView {
     var viewModel: ViewModel
-
+    
     var arView: ARView { return self }
     var subscriptions = Set<AnyCancellable>()
-
+    
     // Origin anchor.
     var originAnchor: AnchorEntity!
-
+    
     // POV anchor attached to anchor.
     var pov: AnchorEntity!
-
+    
     // Custom entities.
     var testSphere: ModelEntity!
     var testBox: ModelEntity!
     var toyPlane: ModelEntity!
-        
+    
     init(frame: CGRect, viewModel: ViewModel) {
         self.viewModel = viewModel
         super.init(frame: frame)
@@ -63,7 +63,7 @@ class CustomARView: ARView {
         setupEntities()
         setupSubscriptions()
     }
-        
+    
     // Setup scene configuration.
     func setupScene() {
         // Create an anchor at scene origin.
@@ -87,61 +87,59 @@ class CustomARView: ARView {
         } else {
             print("❗️ARWorldTrackingConfiguration: Does not support sceneReconstruction.")
         }
-
+        
         // Run configuration.
         arView.session.run(configuration)
         
         // Enable physics.
         arView.environment.sceneUnderstanding.options.insert(.physics)
     }
-
+    
     
     /// Define entities.
     func setupEntities() {
         // Attach test sphere to origin anchor.
-        testSphere = makeSphereEntity(name: "sphere", radius: 0.05, color: .red)
+        testSphere = makeSphereEntity(name: "sphere", radius: 0.05, imageName: "checker.png", tintColor: .green)
         originAnchor.addChild(testSphere)
-
+        
         // Attach test box to left of test sphere.
-        testBox = makeBoxEntity(name: "box", width: 0.1, height: 0.1, depth: 0.1, imageName: "checker.png")
+        testBox = makeBoxEntity(name: "box", width: 0.1, height: 0.1, depth: 0.1, imageName: "checker.png", tintColor: .red)
         testBox.position.x = -0.25
         testSphere.addChild(testBox)
-
+        
         // Attach toy plane to right of test sphere.
         toyPlane = makeModelEntity(name: "plane", usdzModelName: "toy_biplane")
         toyPlane.animate(true)
         toyPlane.position.x = 0.25
         testSphere.addChild(toyPlane)
     }
-
+    
     
     /// Define subscriptions. i.e. Listen to updates to viewModel.
     func setupSubscriptions() {
-        /*
         // Called every frame.
         scene.subscribe(to: SceneEvents.Update.self) { [weak self] event in
             guard let self else { return }
             
             // Get camera position.
             let povPosition = pov.position(relativeTo: originAnchor)
-            print(povPosition)
+            // print(povPosition)
         }
         .store(in: &subscriptions)
-         */
-         
-
+        
+        
         // Process UI signals.
         viewModel.uiSignal.sink { [weak self] signal in
             guard let self else { return }
-
+            
             switch signal {
             case .reset:
-                resetScene()
+                randomize()
             }
         }
         .store(in: &subscriptions)
-
-
+        
+        
         // Process change to showDebug state variable.
         viewModel.$showDebug.sink { [weak self] showDebug in
             guard let self else { return }
@@ -156,11 +154,41 @@ class CustomARView: ARView {
         }
         .store(in: &subscriptions)
     }
-
+    
     
     /// Reset scene.
     func resetScene() {
         // Move test sphere and children in front of camera.
         testSphere.transform.matrix = pov.transformMatrix(relativeTo: originAnchor) * Transform(translation: [0, 0, -0.5]).matrix
     }
+    
+    func dropAction() {
+        testSphere.generateCollisionShapes(recursive: true)
+        
+        let mass = PhysicsMassProperties(mass: 2)
+        let physicsResource = PhysicsMaterialResource.generate(friction: 0.4, restitution: 0.8)
+        testSphere.physicsBody = PhysicsBodyComponent(massProperties: mass, material: physicsResource)
+        testSphere.physicsBody?.mode = .dynamic
+    }
+    
+    func placeOnPlane() {
+        // Create plane anchor and add to scene.
+        let anchorEntity = AnchorEntity(plane: [.horizontal, .vertical],
+                                        minimumBounds: [0.5, 0.5])
+        arView.scene.anchors.append(anchorEntity)
+        
+        // Attach test sphere to anchor.
+        anchorEntity.addChild(testSphere)
+        testSphere.position.y = 0.05
+    }
+    
+    func randomize() {
+        for idx in 1..<10 {
+            let sphereClone = testSphere.clone(recursive: false)
+            sphereClone.position.y = Float(idx) * 0.1
+
+            testSphere.addChild(sphereClone)
+        }
+    }
+    
 }

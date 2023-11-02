@@ -45,10 +45,10 @@ func makeBoxEntity(name: String, width: Float, height: Float, depth: Float, colo
     return model
 }
 
-func makeBoxEntity(name: String, width: Float, height: Float, depth: Float, imageName: String) -> ModelEntity {
+func makeBoxEntity(name: String, width: Float, height: Float, depth: Float, imageName: String,
+                   tintColor: UIColor = .white.withAlphaComponent(0.999)) -> ModelEntity {
     var material = SimpleMaterial()
-    material.color = .init(tint: .white.withAlphaComponent(0.999),
-                           texture: .init(try! .load(named: imageName)))
+    material.color = .init(tint: tintColor, texture: .init(try! .load(named: imageName)))
     
     let model = ModelEntity(mesh: .generateBox(width: width, height: height, depth: depth), materials: [material])
     model.name = name
@@ -68,11 +68,11 @@ func makeSphereEntity(name: String, radius: Float, color: UIColor) -> ModelEntit
     return model
 }
 
-func makeSphereEntity(name: String, radius: Float, imageName: String) -> ModelEntity {
+func makeSphereEntity(name: String, radius: Float, imageName: String,
+                      tintColor: UIColor = .white.withAlphaComponent(0.999)) -> ModelEntity {
     var material = SimpleMaterial()
-    material.color = .init(tint: .white.withAlphaComponent(0.999),
-                           texture: .init(try! .load(named: imageName)))
-    
+    material.color = .init(tint: tintColor, texture: .init(try! .load(named: imageName)))
+
     let model = ModelEntity(mesh: .generateSphere(radius: radius), materials: [material])
     model.name = name
     
