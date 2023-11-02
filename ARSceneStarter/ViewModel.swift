@@ -17,6 +17,9 @@ class ViewModel: ObservableObject {
     // For handling UI signals.
     enum UISignal {
         case reset
+        case drop
+        case place
+        case randomize
     }
     let uiSignal = PassthroughSubject<UISignal, Never>()
     

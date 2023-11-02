@@ -22,7 +22,21 @@ struct ContentView: View {
                 
                 HStack {
                     resetButton()
+
                     Spacer()
+
+                    dropButton()
+
+                    Spacer()
+
+                    placeButton()
+
+                    Spacer()
+
+                    randomizeButton()
+
+                    Spacer()
+
                     debugButton()
                 }
                 .padding()
@@ -43,6 +57,36 @@ struct ContentView: View {
         }
     }
 
+    // Drop button.
+    func dropButton() -> some View {
+        Button {
+            viewModel.uiSignal.send(.drop)
+        } label: {
+            Text("Drop")
+                .foregroundColor(.white)
+        }
+    }
+
+    // Randomize button.
+    func placeButton() -> some View {
+        Button {
+            viewModel.uiSignal.send(.place)
+        } label: {
+            Text("Place")
+                .foregroundColor(.white)
+        }
+    }
+    
+    // Randomize button.
+    func randomizeButton() -> some View {
+        Button {
+            viewModel.uiSignal.send(.randomize)
+        } label: {
+            Text("Randomize")
+                .foregroundColor(.white)
+        }
+    }
+    
     // Debug button.
     func debugButton() -> some View {
         Button {
