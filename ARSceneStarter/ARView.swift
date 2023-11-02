@@ -29,11 +29,17 @@ class CustomARView: ARView {
     var arView: ARView { return self }
     var subscriptions = Set<AnyCancellable>()
 
+    // Origin anchor.
     var originAnchor: AnchorEntity!
-    var pov: AnchorEntity!
-    
-    var planeAnchor: AnchorEntity?
 
+    // POV anchor attached to anchor.
+    var pov: AnchorEntity!
+
+    // Custom entities.
+    var testSphere: ModelEntity!
+    var testBox: ModelEntity!
+    var toyPlane: ModelEntity!
+        
     init(frame: CGRect, viewModel: ViewModel) {
         self.viewModel = viewModel
         super.init(frame: frame)
@@ -47,6 +53,7 @@ class CustomARView: ARView {
         fatalError("init(frame:) has not been implemented")
     }
     
+    // Call when view first loads.
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         
@@ -57,6 +64,7 @@ class CustomARView: ARView {
         setupSubscriptions()
     }
         
+    // Setup scene configuration.
     func setupScene() {
         // Create an anchor at scene origin.
         originAnchor = AnchorEntity(world: .zero)
@@ -88,14 +96,40 @@ class CustomARView: ARView {
     }
 
     
-    // Define entities here.
+    /// Define entities.
     func setupEntities() {
+        // Attach test sphere to origin anchor.
+        testSphere = makeSphereEntity(name: "sphere", radius: 0.05, color: .red)
+        originAnchor.addChild(testSphere)
 
+        // Attach test box to left of test sphere.
+        testBox = makeBoxEntity(name: "box", width: 0.1, height: 0.1, depth: 0.1, imageName: "checker.png")
+        testBox.position.x = -0.25
+        testSphere.addChild(testBox)
+
+        // Attach toy plane to right of test sphere.
+        toyPlane = makeModelEntity(name: "plane", usdzModelName: "toy_biplane")
+        toyPlane.animate(true)
+        toyPlane.position.x = 0.25
+        testSphere.addChild(toyPlane)
     }
 
     
-    // Define subscriptions here.
+    /// Define subscriptions. i.e. Listen to updates to viewModel.
     func setupSubscriptions() {
+        /*
+        // Called every frame.
+        scene.subscribe(to: SceneEvents.Update.self) { [weak self] event in
+            guard let self else { return }
+            
+            // Get camera position.
+            let povPosition = pov.position(relativeTo: originAnchor)
+            print(povPosition)
+        }
+        .store(in: &subscriptions)
+         */
+         
+
         // Process UI signals.
         viewModel.uiSignal.sink { [weak self] signal in
             guard let self else { return }
@@ -108,32 +142,25 @@ class CustomARView: ARView {
         .store(in: &subscriptions)
 
 
+        // Process change to showDebug state variable.
         viewModel.$showDebug.sink { [weak self] showDebug in
             guard let self else { return }
             
             if showDebug {
                 arView.debugOptions.insert(.showSceneUnderstanding)
+                arView.debugOptions.insert(.showWorldOrigin)
             } else {
                 arView.debugOptions.remove(.showSceneUnderstanding)
+                arView.debugOptions.remove(.showWorldOrigin)
             }
         }
         .store(in: &subscriptions)
-
     }
 
     
-
-    // Reset plane anchor and position entities.
+    /// Reset scene.
     func resetScene() {
-        // Reset plane anchor. //
-        planeAnchor?.removeFromParent()
-        planeAnchor = nil
-        
-//        planeAnchor = AnchorEntity(plane: [.horizontal])
-        planeAnchor = AnchorEntity(.plane([.vertical, .horizontal],
-                              classification: [.wall, .floor, .ceiling],
-                               minimumBounds: [1.0, 1.0]))
-        
-        arView.scene.addAnchor(planeAnchor!)
+        // Move test sphere and children in front of camera.
+        testSphere.transform.matrix = pov.transformMatrix(relativeTo: originAnchor) * Transform(translation: [0, 0, -0.5]).matrix
     }
 }

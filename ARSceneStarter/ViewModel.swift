@@ -11,7 +11,7 @@ import Combine
 
 @MainActor
 class ViewModel: ObservableObject {
-
+    // App state variables.
     @Published var showDebug = false
     
     // For handling UI signals.
