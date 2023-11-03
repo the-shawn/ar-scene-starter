@@ -38,7 +38,7 @@ class CustomARView: ARView {
     // Custom entities.
     var testSphere: ModelEntity!
     var testBox: ModelEntity!
-    var toyPlane: ModelEntity!
+    var guitar: ModelEntity!
     
     init(frame: CGRect, viewModel: ViewModel) {
         self.viewModel = viewModel
@@ -79,7 +79,6 @@ class CustomARView: ARView {
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.environmentTexturing = .automatic
         arView.renderOptions = [.disableDepthOfField, .disableMotionBlur]
-        arView.session.run(configuration)
         
         // Enable mesh scene reconstruction.
         if ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) {
@@ -100,10 +99,9 @@ class CustomARView: ARView {
     func setupEntities() {
         testSphere = makeSphereEntity(name: "sphere", radius: 0.05, color: .orange)
         
-        testBox = makeBoxEntity(name: "box", width: 0.1, height: 0.1, depth: 0.1, imageName: "checker.png")
+        testBox = makeBoxEntity(name: "box", width: 0.5, height: 0.5, depth: 0.5, imageName: "checker.png")
         
-        toyPlane = makeModelEntity(name: "plane", usdzModelName: "toy_biplane")
-        toyPlane.animate(true)
+        guitar = makeModelEntity(name: "plane", usdzModelName: "fender_stratocaster")
     }
     
     
@@ -164,21 +162,29 @@ class CustomARView: ARView {
         originAnchor.addChild(testSphere)
 
         // Attach test box to left of test sphere.
-        testBox.position.x = -0.25
+        testBox.position.x = -0.75
+        testBox.position.y = 0.25 - 0.05
         testSphere.addChild(testBox)
 
-        // Attach toy plane to right of test sphere.
-        toyPlane.position.x = 0.25
-        testSphere.addChild(toyPlane)
+        // Attach guitar to right of test sphere.
+        guitar.position.x = 0.75
+        guitar.position.y = -0.05
+        testSphere.addChild(guitar)
 
         // Move test sphere and children in front of camera.
-        testSphere.transform.matrix = pov.transformMatrix(relativeTo: originAnchor) * Transform(translation: [0, 0, -0.5]).matrix
+        testSphere.transform.matrix = pov.transformMatrix(relativeTo: originAnchor) * Transform(translation: [0, 0, -1.0]).matrix
     }
     
     // Add physics to sphere and drop.
     func dropSphere() {
+        // Remove from test sphere.
+        testBox.removeFromParent()
+        guitar.removeFromParent()
+
+        // Generate collision shape.
         testSphere.generateCollisionShapes(recursive: true)
         
+        // Create and set physics body.
         let mass = PhysicsMassProperties(mass: 0.5)
         let physicsResource = PhysicsMaterialResource.generate(friction: 0.4, restitution: 0.95)
         testSphere.physicsBody = PhysicsBodyComponent(massProperties: mass, material: physicsResource)
@@ -191,7 +197,8 @@ class CustomARView: ARView {
                                         minimumBounds: [0.25, 0.25])
         arView.scene.anchors.append(anchorEntity)
         
-        // Attach test sphere to anchor.
+        // Clear transform and attach test sphere to anchor.
+        testSphere.transform = .identity
         anchorEntity.addChild(testSphere)
         testSphere.position.y = 0.05
     }

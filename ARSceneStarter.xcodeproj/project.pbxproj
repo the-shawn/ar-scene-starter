@@ -17,6 +17,7 @@
 		6A8D73CC2AF3D4B4005AECA4 /* toy_biplane.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 6A8D73CB2AF3D4B4005AECA4 /* toy_biplane.usdz */; };
 		6A8D73CE2AF3DA8A005AECA4 /* checker.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A8D73CD2AF3DA8A005AECA4 /* checker.png */; };
 		6A8D73EA2AF412ED005AECA4 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8D73E92AF412ED005AECA4 /* Color+.swift */; };
+		6AE846F32AF5267500638E74 /* fender_stratocaster.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 6AE846F22AF5267500638E74 /* fender_stratocaster.usdz */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		6A8D73CB2AF3D4B4005AECA4 /* toy_biplane.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = toy_biplane.usdz; sourceTree = "<group>"; };
 		6A8D73CD2AF3DA8A005AECA4 /* checker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checker.png; sourceTree = "<group>"; };
 		6A8D73E92AF412ED005AECA4 /* Color+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
+		6AE846F22AF5267500638E74 /* fender_stratocaster.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = fender_stratocaster.usdz; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 		6A8D73CA2AF3D4B4005AECA4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6AE846F22AF5267500638E74 /* fender_stratocaster.usdz */,
 				6A8D73CB2AF3D4B4005AECA4 /* toy_biplane.usdz */,
 			);
 			path = Models;
@@ -161,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6A8D73BB2AF2D04C005AECA4 /* Preview Assets.xcassets in Resources */,
+				6AE846F32AF5267500638E74 /* fender_stratocaster.usdz in Resources */,
 				6A8D73B82AF2D04C005AECA4 /* Assets.xcassets in Resources */,
 				6A8D73CC2AF3D4B4005AECA4 /* toy_biplane.usdz in Resources */,
 				6A8D73CE2AF3DA8A005AECA4 /* checker.png in Resources */,
