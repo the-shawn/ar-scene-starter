@@ -142,9 +142,11 @@ class CustomARView: ARView {
             if showDebug {
                 arView.debugOptions.insert(.showSceneUnderstanding)
                 arView.debugOptions.insert(.showWorldOrigin)
+                // arView.debugOptions.insert(.showPhysics)
             } else {
                 arView.debugOptions.remove(.showSceneUnderstanding)
                 arView.debugOptions.remove(.showWorldOrigin)
+                // arView.debugOptions.remove(.showPhysics)
             }
         }
         .store(in: &subscriptions)
@@ -182,12 +184,10 @@ class CustomARView: ARView {
         guitar.removeFromParent()
 
         // Generate collision shape.
-        testSphere.generateCollisionShapes(recursive: true)
+        testSphere.collision = CollisionComponent(shapes: [.generateSphere(radius: 0.05)])
         
         // Create and set physics body.
-        let mass = PhysicsMassProperties(mass: 0.5)
-        let physicsResource = PhysicsMaterialResource.generate(friction: 0.4, restitution: 0.95)
-        testSphere.physicsBody = PhysicsBodyComponent(massProperties: mass, material: physicsResource)
+        testSphere.physicsBody = PhysicsBodyComponent(shapes: [.generateSphere(radius: 0.05)], mass: 5.0)
         testSphere.physicsBody?.mode = .dynamic
     }
     
