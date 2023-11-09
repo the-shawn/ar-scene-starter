@@ -11,6 +11,8 @@ import RealityKit
 
 struct ContentView: View {
     @StateObject var viewModel: ViewModel
+    @State private var showingTextInput = false
+    @State private var inputText = ""
     
     var body: some View {
         ZStack {
@@ -41,6 +43,21 @@ struct ContentView: View {
                 }
                 .padding()
             }
+            
+            Button(action: {
+                            self.showingTextInput = true
+                        }) {
+                            Text("Add Text")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
+                        // This is the sheet that presents the text input view
+                        .sheet(isPresented: $showingTextInput) {
+                            // Pass the binding to the text field
+                            TextInputView(inputText: $inputText, isPresented: $showingTextInput, viewModel: viewModel)
+                        }
         }
     }
     
@@ -94,6 +111,30 @@ struct ContentView: View {
         } label: {
             Text(viewModel.showDebug ? "Debug On" : "Debug Off")
                 .foregroundColor(.white)
+        }
+    }
+}
+
+struct TextInputView: View {
+    @Binding var inputText: String
+    @Binding var isPresented: Bool
+    var viewModel: ViewModel // Directly passing the ViewModel
+
+    var body: some View {
+        VStack {
+            TextField("Enter text", text: $inputText)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            Button("Add") {
+                // Call the function to create the text entity with the input text
+                viewModel.createTextEntity(with: inputText)
+                self.isPresented = false // Dismiss the sheet
+            }
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
         }
     }
 }

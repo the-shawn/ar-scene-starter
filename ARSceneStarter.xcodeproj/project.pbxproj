@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29D1CA182AFD3F020052861E /* Sofa_3230.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 29D1CA162AFD3F020052861E /* Sofa_3230.usdz */; };
+		29D1CA192AFD3F020052861E /* Sofá_-_IKEA_NOCKEBY.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 29D1CA172AFD3F020052861E /* Sofá_-_IKEA_NOCKEBY.usdz */; };
+		29D1CA1B2AFD3FA60052861E /* Desk_Low-Poly.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 29D1CA1A2AFD3FA60052861E /* Desk_Low-Poly.usdz */; };
 		6A8D73B42AF2D04B005AECA4 /* ARSceneStarterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8D73B32AF2D04B005AECA4 /* ARSceneStarterApp.swift */; };
 		6A8D73B62AF2D04B005AECA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8D73B52AF2D04B005AECA4 /* ContentView.swift */; };
 		6A8D73B82AF2D04C005AECA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A8D73B72AF2D04C005AECA4 /* Assets.xcassets */; };
@@ -21,6 +24,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		29D1CA162AFD3F020052861E /* Sofa_3230.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = Sofa_3230.usdz; sourceTree = "<group>"; };
+		29D1CA172AFD3F020052861E /* Sofá_-_IKEA_NOCKEBY.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = "Sofá_-_IKEA_NOCKEBY.usdz"; sourceTree = "<group>"; };
+		29D1CA1A2AFD3FA60052861E /* Desk_Low-Poly.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = "Desk_Low-Poly.usdz"; sourceTree = "<group>"; };
 		6A8D73B02AF2D04B005AECA4 /* ARSceneStarter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARSceneStarter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A8D73B32AF2D04B005AECA4 /* ARSceneStarterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSceneStarterApp.swift; sourceTree = "<group>"; };
 		6A8D73B52AF2D04B005AECA4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -98,6 +104,9 @@
 		6A8D73CA2AF3D4B4005AECA4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				29D1CA1A2AFD3FA60052861E /* Desk_Low-Poly.usdz */,
+				29D1CA172AFD3F020052861E /* Sofá_-_IKEA_NOCKEBY.usdz */,
+				29D1CA162AFD3F020052861E /* Sofa_3230.usdz */,
 				6AE846F22AF5267500638E74 /* fender_stratocaster.usdz */,
 				6A8D73CB2AF3D4B4005AECA4 /* toy_biplane.usdz */,
 			);
@@ -167,7 +176,10 @@
 				6AE846F32AF5267500638E74 /* fender_stratocaster.usdz in Resources */,
 				6A8D73B82AF2D04C005AECA4 /* Assets.xcassets in Resources */,
 				6A8D73CC2AF3D4B4005AECA4 /* toy_biplane.usdz in Resources */,
+				29D1CA182AFD3F020052861E /* Sofa_3230.usdz in Resources */,
 				6A8D73CE2AF3DA8A005AECA4 /* checker.png in Resources */,
+				29D1CA192AFD3F020052861E /* Sofá_-_IKEA_NOCKEBY.usdz in Resources */,
+				29D1CA1B2AFD3FA60052861E /* Desk_Low-Poly.usdz in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,7 +329,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ARSceneStarter/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 592DX3X55K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
@@ -348,7 +360,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ARSceneStarter/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 592DX3X55K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";

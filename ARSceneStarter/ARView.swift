@@ -25,7 +25,7 @@ struct ARViewContainer: UIViewRepresentable {
 // Custom ARView.
 class CustomARView: ARView {
     var viewModel: ViewModel
-    
+    var currentEntity: ModelEntity?
     var arView: ARView { return self }
     var subscriptions = Set<AnyCancellable>()
     
@@ -63,6 +63,7 @@ class CustomARView: ARView {
         setupEntities()
         setupSubscriptions()
     }
+    
     
     // Setup scene configuration.
     func setupScene() {
@@ -130,6 +131,8 @@ class CustomARView: ARView {
                 placeOnPlane()
             case .randomize:
                 randomize()
+            case .createTextEntity(let text):
+                createTextEntity(text)
             }
         }
         .store(in: &subscriptions)
@@ -150,6 +153,22 @@ class CustomARView: ARView {
             }
         }
         .store(in: &subscriptions)
+    }
+    
+    func createTextEntity(_ text: String) {
+        let font = UIFont.systemFont(ofSize: 0.1)
+        let textMesh = MeshResource.generateText(text, extrusionDepth: 0.01, font: font)
+        let material = SimpleMaterial(color: .white, isMetallic: false)
+        let textEntity = ModelEntity(mesh: textMesh, materials: [material])
+
+        // Add to origin anchor for now
+        originAnchor.addChild(textEntity)
+
+        // Position it in front of the camera
+        textEntity.transform.matrix = pov.transformMatrix(relativeTo: originAnchor) * Transform(translation: [0, 0, -1.0]).matrix
+        
+        currentEntity = textEntity
+
     }
     
     /// Reset scene.
@@ -191,16 +210,18 @@ class CustomARView: ARView {
         testSphere.physicsBody?.mode = .dynamic
     }
     
-    // Create plane anchor and add to scene.
-    func placeOnPlane() {
-        let anchorEntity = AnchorEntity(plane: [.horizontal, .vertical],
-                                        minimumBounds: [0.25, 0.25])
-        arView.scene.anchors.append(anchorEntity)
-        
-        // Clear transform and attach test sphere to anchor.
-        testSphere.transform = .identity
-        anchorEntity.addChild(testSphere)
-        testSphere.position.y = 0.05
+    // 将当前实体放置在平面上。
+        func placeOnPlane() {
+            guard let currentEntity = currentEntity else { return }
+            
+            let anchorEntity = AnchorEntity(plane: [.horizontal, .vertical],
+                                            minimumBounds: [0.25, 0.25])
+            arView.scene.anchors.append(anchorEntity)
+            
+            // Clear transform and attach current entity to anchor.
+            currentEntity.transform = .identity
+            anchorEntity.addChild(currentEntity)
+            currentEntity.position.y = 0.05 // You might want to adjust this
     }
 
     // Create boxes, attach to test sphere and randomly position.
