@@ -13,6 +13,7 @@ struct ContentView: View {
     @StateObject var viewModel: ViewModel
     @State private var showingTextInput = false
     @State private var inputText = ""
+    @State private var isRecording = false
     
     var body: some View {
         ZStack {
@@ -42,6 +43,24 @@ struct ContentView: View {
                     debugButton()
                 }
                 .padding()
+                
+                // Microphone button
+                Button(action: {
+                    isRecording.toggle()
+                    if isRecording {
+                        viewModel.startRecording()
+                    } else {
+                        viewModel.stopRecording()
+                    }
+                }) {
+                    Image(systemName: isRecording ? "mic.fill" : "mic.slash.fill")
+                        .font(.largeTitle)
+                        .padding()
+                        .background(isRecording ? Color.red : Color.blue)
+                        .foregroundColor(.white)
+                        .clipShape(Circle())
+                }
+                .padding(.bottom)
             }
             
             Button(action: {

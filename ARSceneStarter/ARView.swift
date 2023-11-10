@@ -24,6 +24,9 @@ struct ARViewContainer: UIViewRepresentable {
 
 // Custom ARView.
 class CustomARView: ARView {
+    var entityToURLMap: [ModelEntity: URL] = [:]
+    var recordingsMap = [ModelEntity: URL]()
+    
     var viewModel: ViewModel
     var currentEntity: ModelEntity?
     var arView: ARView { return self }
@@ -43,6 +46,7 @@ class CustomARView: ARView {
     init(frame: CGRect, viewModel: ViewModel) {
         self.viewModel = viewModel
         super.init(frame: frame)
+        setupGestureRecognizers()
     }
     
     required init?(coder decoder: NSCoder) {
@@ -133,6 +137,10 @@ class CustomARView: ARView {
                 randomize()
             case .createTextEntity(let text):
                 createTextEntity(text)
+            case .recordingFinished(recording: let recording):
+                DispatchQueue.main.async {
+                    self.addRecordingToScene(recording: recording)
+                }
             }
         }
         .store(in: &subscriptions)
@@ -210,7 +218,6 @@ class CustomARView: ARView {
         testSphere.physicsBody?.mode = .dynamic
     }
     
-    // 将当前实体放置在平面上。
         func placeOnPlane() {
             guard let currentEntity = currentEntity else { return }
             
@@ -235,4 +242,55 @@ class CustomARView: ARView {
             testSphere.addChild(boxCopy)
         }
     }
+    
+    // Method to setup the sphere entity for recordings
+    func setupRecordingSphere(url: URL) {
+        // 创建球体实体
+        let sphereEntity = makeSphereEntity(name: "RecordingSphere", radius: 0.1, color: .blue)
+
+        // 将球体实体添加到原点锚点
+        originAnchor.addChild(sphereEntity)
+
+        // 使用字典存储实体和录音 URL 的关联关系
+        entityToURLMap[sphereEntity] = url
+
+        // 添加点击手势识别器
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        self.addGestureRecognizer(tapGesture)
+    }
+
+
+    @objc func handleTap(gesture: UITapGestureRecognizer) {
+        // 获取点击位置
+        let location = gesture.location(in: self)
+        let hitTestResults = self.hitTest(location)
+
+        // 确定点击的实体
+        for result in hitTestResults {
+            if let modelEntity = result.entity as? ModelEntity,
+               let recordingURL = entityToURLMap[modelEntity] {
+                // 如果点击的实体与录音关联，则播放录音
+                DispatchQueue.main.async {
+                    self.viewModel.playRecording(url: recordingURL)
+                }
+                break // 找到点击的实体后停止循环
+            }
+        }
+    }
+
+    
+    func addRecordingToScene(recording: URL) {
+        let sphereEntity = makeSphereEntity(name: "RecordingSphere", radius: 0.02, color: .blue)
+        
+        originAnchor.addChild(sphereEntity)
+        
+        entityToURLMap[sphereEntity] = recording
+    }
+
+    func setupGestureRecognizers() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        self.addGestureRecognizer(tapGesture)
+    }
+
+
 }
